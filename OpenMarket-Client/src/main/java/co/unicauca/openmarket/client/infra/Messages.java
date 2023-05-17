@@ -1,23 +1,28 @@
-
 package co.unicauca.openmarket.client.infra;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author Libardo, Julio
+ * @author Pantoja,  Hurtado
  */
 public class Messages {
 
-    /**
+    public static void showMessageDialog(String message, String title) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static int showConfirmDialog(String message, String title) {
+        return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+     /**
      * Genera un emergente de aventencia
      *
      * @param mns mensaje dentro de la ventana
      * @param title título de la ventana
      */
     public static void warningMessage(String mns, String title) {
-        JOptionPane.showMessageDialog(null, mns, title, JOptionPane.DEFAULT_OPTION, new ImageIcon("./src/recursos/warning.png"));
+        JOptionPane.showMessageDialog(null, mns, title, JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -27,7 +32,7 @@ public class Messages {
      * @param titulo título de la ventana
      */
     public static void errorMessage(String mns, String titulo) {
-        JOptionPane.showMessageDialog(null, mns, titulo, JOptionPane.DEFAULT_OPTION, new ImageIcon("./src/recursos/warning.png"));
+        JOptionPane.showMessageDialog(null, mns, titulo, JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -37,7 +42,7 @@ public class Messages {
      * @param title título de la ventana
      */
     public static void successMessage(String mns, String title) {
-        JOptionPane.showMessageDialog(null, mns, title, JOptionPane.DEFAULT_OPTION, new ImageIcon("./src/recursos/exitoso.png"));
+        JOptionPane.showMessageDialog(null, mns, title, JOptionPane.ERROR_MESSAGE);
     }
 
     /**

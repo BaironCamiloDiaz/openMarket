@@ -1,23 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package co.unicauca.openmarket.client.infra;
 
-import co.unicauca.travelagency.commons.infra.Utilities;
+//import co.unicauca.strategyserver.helpers.Utilities;
+import co.unicauca.strategyserver.helpers.Utilities;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Representa el Socket de la aplicación cliente. Su función es enviar una
- * solicitud/respuesta entre el cliente y el servidor.
- *
- * @author Libardo, Julio
- */
-public class OpenMarketSocket {
 
+public class OpenMarketSocket {
     /**
      * Socket de la aplicación cliente
      */
+    
     private java.net.Socket socket = null;
     /**
      * Permite leer la recibir la respuesta del socket
@@ -94,5 +95,6 @@ public class OpenMarketSocket {
         socket = new java.net.Socket(IP_SERVER, PORT);
         Logger.getLogger("SocketClient").log(Level.INFO, "Socket establecido");
     }
+    
 
 }

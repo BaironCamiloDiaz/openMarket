@@ -4,104 +4,190 @@
  * and open the template in the editor.
  */
 package co.unicauca.openmarket.server.infra.tcpip;
-
+import co.unicauca.openmarket.client.domain.Category;
+import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.infra.Protocol;
+import co.unicauca.openmarket.domain.services.CategoryService;
 import co.unicauca.strategyserver.infra.ServerHandler;
-import co.unicauca.travelagency.commons.domain.Customer;
-import co.unicauca.travelagency.commons.infra.JsonError;
-import co.unicauca.travelagency.commons.infra.Protocol;
-import co.unicauca.travelagency.server.access.CustomerRepositoryImplArrays;
-import co.unicauca.openmarket.server.domain.services.CustomerService;
+import co.unicauca.openmarket.commons.infra.JsonError;
+import co.unicauca.openmarket.domain.services.ProductService;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- *
- * @author ahurtado
- */
+
+
+
 public class OpenMarketHandler extends ServerHandler {
-
-     /**
-     * Servicio de clientes
+    /**
+     * Servicio de categoria
+     * servicio de producto
      */
-    private static CustomerService service;
-
+    private static CategoryService service;
+     private static ProductService serviceProduc;
     public OpenMarketHandler() {
     }
 
-     /**
+    /**
      * Procesar la solicitud que proviene de la aplicación cliente
      *
-     * @param requestJson petición que proviene del cliente socket en formato
-     * json que viene de esta manera:
-     * "{"resource":"customer","action":"get","parameters":[{"name":"id","value":"1"}]}"
-     *
      */
-   
-    
     @Override
     public String processRequest(String requestJson) {
-        // Convertir la solicitud a objeto Protocol para poderlo procesar
         Gson gson = new Gson();  
         Protocol protocolRequest;
         protocolRequest = gson.fromJson(requestJson, Protocol.class);
         String response="";
         switch (protocolRequest.getResource()) {
-            case "customer":
+            case "category" -> {
                 if (protocolRequest.getAction().equals("get")) {
-                    // Consultar un customer
-                    response = processGetCustomer(protocolRequest);
+                    // Consultar una categoria
+                    response = processGetCategory(protocolRequest);
                 }
 
                 if (protocolRequest.getAction().equals("post")) {
-                    // Agregar un customer    
-                    response = processPostCustomer(protocolRequest);
-
+                    // Agregar una categoria    
+                    response = processPostCategory(protocolRequest);
+                }
+                if (protocolRequest.getAction().equals("edit")){
+                    // Editar categoria
+                    response = processEditCategory(protocolRequest);
+                } 
+                if(protocolRequest.getAction().equals("delete")){
+                    //Eliminar categoria
+                    response = processDeleteCategory(protocolRequest);
+                }
+                if(protocolRequest.getAction().equals("listCategory")){
+                    response = processListCategory();
+                }
+                if(protocolRequest.getAction().equals("getListCategory")){
+                    response = processGetListCategory(protocolRequest);
                 }
                 break;
+            }
+            case"product"->{
+                if (protocolRequest.getAction().equals("get")) {
+                    // Consultar un producto por ide
+                    response = processGetProduct(protocolRequest);
+                }
+                if (protocolRequest.getAction().equals("post")) {
+                    // Agregar un nuevo producto  
+                    response = processPostProduct(protocolRequest);
+                }
+                 if (protocolRequest.getAction().equals("edit")){
+                    // Editar un producto
+                    response = processEditproduct(protocolRequest);
+                }
+                break;
+             }
         }
         return response;
-
     }
-
+    
     /**
-     * Procesa la solicitud de consultar un customer
+     * Procesa la solicitud de consultar una categoria
      *
      * @param protocolRequest Protocolo de la solicitud
      */
-    private String processGetCustomer(Protocol protocolRequest) {
+    private String processGetCategory(Protocol protocolRequest) {
         // Extraer la cedula del primer parámetro
-        String id = protocolRequest.getParameters().get(0).getValue();
-        Customer customer = service.findCustomer(id);
-        if (customer == null) {
+        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue()) ;
+        Category category = service.findById(id);
+        if (category == null) {
             String errorJson = generateNotFoundErrorJson();
             return errorJson;
         } else {
-            return objectToJSON(customer);
+            return objectToJSON(category);
         }
     }
-
+  
     /**
-     * Procesa la solicitud de agregar un customer
+     * Procesa la solicitud de agregar una categoria
      *
      * @param protocolRequest Protocolo de la solicitud
      */
-    private String processPostCustomer(Protocol protocolRequest) {
-        Customer customer = new Customer();
-        // Reconstruir el customer a partid de lo que viene en los parámetros
-        customer.setId(protocolRequest.getParameters().get(0).getValue());
-        customer.setFirstName(protocolRequest.getParameters().get(1).getValue());
-        customer.setLastName(protocolRequest.getParameters().get(2).getValue());
-        customer.setAddress(protocolRequest.getParameters().get(3).getValue());
-        customer.setEmail(protocolRequest.getParameters().get(4).getValue());
-        customer.setGender(protocolRequest.getParameters().get(5).getValue());
-        customer.setMobile(protocolRequest.getParameters().get(6).getValue());
-
-        String response = getService().createCustomer(customer);
-        return response;
+    private String processPostCategory(Protocol protocolRequest) {
+        Category category = new Category();
+        // Reconstruir La categoria a partir de lo que viene en los parámetros
+        category.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
+        category.setName(protocolRequest.getParameters().get(1).getValue());
+        boolean response = getService().save(category);
+        String respuesta=String.valueOf(response);
+        return respuesta;
     }
-
+    
+     // Editar el name de la categoria
+    private String processEditCategory(Protocol protocolRequest){
+      
+        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue());
+        String name = protocolRequest.getParameters().get(1).getValue();
+        Category newCategory = new Category(id, name);
+        boolean response = service.edit(id, newCategory);
+        String respuesta=String.valueOf(response);
+        return respuesta;
+    }
+     // Eliminar una categoria
+    private String processDeleteCategory(Protocol protocolRequest){
+       
+       Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue());
+       boolean response = service.delete(id);
+       String respuesta=String.valueOf(response);
+       return respuesta;
+    }
+    
+    // Lista de todas las categorias
+    private String processListCategory(){
+       
+       List<Category> category;
+       category = service.findAll();
+       return objectToJSON(category);
+    }
+    
+    // Buscar por nombre   
+    private String processGetListCategory(Protocol protocolRequest){
+           
+       return "";
+    }
+    
+    
+    
+     private String processGetProduct(Protocol protocolRequest) {
+        // Extraer la cedula del primer parámetro
+        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue()) ;
+        Product producto = serviceProduc.findById(id);
+        if (producto == null) {
+            String errorJson = generateNotFoundErrorJson();
+            return errorJson;
+        } else {
+            return objectToJSON(producto);
+        }
+    }
+    private String processPostProduct(Protocol protocolRequest) {
+        Product producto=new Product();
+        // Reconstruir La categoria a partir de lo que viene en los parámetros
+        producto.setProductId(Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
+        producto.setName(protocolRequest.getParameters().get(1).getValue());
+        producto.setDescription(protocolRequest.getParameters().get(2).getValue());
+        producto.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(3).getValue()));
+        
+        boolean response = this.getServiceProduc().save(producto);
+        String respuesta=String.valueOf(response);
+        return respuesta;
+    }
+    
+    private String processEditproduct(Protocol protocolRequest){
+        Product producto=new Product();
+        producto.setProductId( Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
+        producto.setName( protocolRequest.getParameters().get(1).getValue());
+        producto.setDescription(protocolRequest.getParameters().get(2).getValue());
+        producto.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
+       
+        boolean response = serviceProduc.edit(producto);
+        String respuesta=String.valueOf(response);
+        return respuesta;
+    }
+    
     /**
      * Genera un ErrorJson de cliente no encontrado
      *
@@ -112,7 +198,7 @@ public class OpenMarketHandler extends ServerHandler {
         JsonError error = new JsonError();
         error.setCode("404");
         error.setError("NOT_FOUND");
-        error.setMessage("Cliente no encontrado. Cédula no existe");
+        error.setMessage("La clase no es encontrada. ID obvio no debe de existe");
         errors.add(error);
 
         Gson gson = new Gson();
@@ -120,18 +206,25 @@ public class OpenMarketHandler extends ServerHandler {
 
         return errorsJson;
     }
-
-    /**
+    
+     /**
      * @return the service
      */
-    public CustomerService getService() {
+    public CategoryService getService() {
         return service;
     }
-
+    public ProductService getServiceProduc() {
+        return serviceProduc;
+    }
+    public void setServiceProduct(ProductService serviceProduc) {
+        this.serviceProduc = serviceProduc;
+    } 
     /**
      * @param service the service to set
      */
-    public void setService(CustomerService service) {
+    public void setService(CategoryService service) {
         this.service = service;
     } 
+    
+   
 }

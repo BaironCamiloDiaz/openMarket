@@ -4,31 +4,33 @@
  * and open the template in the editor.
  */
 package co.unicauca.openmarket.server.infra.tcpip;
-
+import co.unicauca.openmarket.client.access.CategoryRepositoryArrays;
+import co.unicauca.openmarket.client.access.ProductRepositoryArrays;
+import co.unicauca.openmarket.domain.services.CategoryService;
+import co.unicauca.openmarket.domain.services.ProductService;
 import co.unicauca.strategyserver.infra.ServerSocketMultiThread;
-import co.unicauca.travelagency.server.access.CustomerRepositoryImplArrays;
-import co.unicauca.openmarket.server.domain.services.CustomerService;
-import java.util.Scanner;
+import java.util.Scanner; 
 
 
-/**
- *
- * @author ahurtado
- */
-public class OpenMarketServer {
-    /**
+public class OpeMarketServer {
+     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) {
         // TODO code application logic here
         Scanner teclado = new Scanner(System.in);
-        System.out.println("Ingrese el puerto de escucha");
+        System.out.println("Ingrese el puerto de escucha ");
         int port = teclado.nextInt();
         ServerSocketMultiThread myServer = new ServerSocketMultiThread(port);
         OpenMarketHandler myHandler = new OpenMarketHandler();
-        myHandler.setService(new CustomerService(new CustomerRepositoryImplArrays()));
+       
+        myHandler.setService(new CategoryService(new CategoryRepositoryArrays()));
+       
+        myHandler.setServiceProduct(new ProductService(new ProductRepositoryArrays()));
+       
         myServer.setServerHandler(myHandler);
+      
         myServer.startServer();
     }
-    
 }
