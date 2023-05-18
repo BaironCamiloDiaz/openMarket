@@ -12,7 +12,7 @@ import co.unicauca.strategyserver.infra.ServerSocketMultiThread;
 import java.util.Scanner; 
 
 
-public class OpeMarketServer {
+public class OpenMarketServer {
      /**
      * @param args the command line arguments
      */

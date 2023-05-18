@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package co.unicauca.openmarket.client.access;
 
 
@@ -339,4 +338,3 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
     }
 
 }
-
