@@ -1,0 +1,16 @@
+GERALDINE CARLOSAMA
+BAIRON PALECHOR
+
+
+ANALISIS DE LA SOLUCION
+
+Cuando hablamos sobre la arquitectura y los requerimientos de una aplicación cliente-servidor basada en sockets. 
+La arquitectura de la aplicación debe estar organizada en capas desde el punto de vista de los módulos. Esto significa que se deben separar las diferentes funcionalidades de la aplicación en capas lógicas, como la capa de presentación, la capa de lógica de negocio y la capa de acceso a datos. Esta estructura modular facilita el mantenimiento y la escalabilidad de la aplicación.
+El proyecto Open Market se basa en una arquitectura cliente-servidor, donde los clientes se conectan a un balanceador de carga que distribuye las solicitudes entre cinco servidores. A continuación, analizaré los aspectos de la arquitectura en relación con la calidad, escalabilidad, desempeño y modificabilidad, así como la táctica y el patrón de arquitectura utilizados.
+La fiabilidad en la arquitectura cliente-servidor con balanceador de carga mejora la fiabilidad al distribuir la carga entre múltiples servidores. Si uno de los servidores falla, los otros servidores pueden manejar las solicitudes.
+La disponibilidad en la arquitectura decimos que al tener múltiples servidores, se mejora la disponibilidad del sistema. Si uno de los servidores se cae, el balanceador de carga redirige las solicitudes a otros servidores disponibles.
+La estructura en capas de la arquitectura permite una mayor mantenibilidad, ya que los diferentes módulos de la aplicación se pueden modificar, actualizar o solucionar problemas de forma independiente.
+El servidor se implementa utilizando la infraestructura proporcionada por el framework StrategyServer. El servidor se encarga de procesar las solicitudes recibidas del cliente y enviar las respuestas correspondientes. La utilización de un balanceador de carga y múltiples instancias del servidor contribuye a mejorar la escalabilidad y el desempeño del sistema.
+El desempeño del sistema se puede mejorar mediante la implementación de un balanceador de carga eficiente, que distribuya las solicitudes de manera equitativa entre los servidores. Además, el análisis menciona la medición del tiempo promedio de respuesta de los servidores como parte de la mejora del desempeño.
+Sin embargo, la estructura en capas y la utilización de un patrón de arquitectura como el Modelo Cliente-Servidor facilitan la modificabilidad del sistema, ya que los cambios pueden ser realizados en módulos específicos sin afectar otras partes del sistema.
+En resumen, la solución del proyecto Open Market utiliza una arquitectura cliente-servidor basada en sockets, con un enfoque en la escalabilidad y el desempeño del sistema. La implementación de un balanceador de carga y múltiples servidores contribuye a mejorar estos aspectos. La estructura modular y el patrón de arquitectura utilizado facilitan la modificabilidad del sistema.
